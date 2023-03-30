@@ -2,25 +2,29 @@ import styles from './Product.module.scss';
 import clsx from 'clsx';
 import Button from '../Button/Button';
 import PropTypes from 'prop-types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 
 const Product = props => {
-  const [currentColor, setCurrentColor] = useState('white');
-  const [currentSize, setCurrentSize] = useState('S');
+  const [currentColor, setCurrentColor] = useState([]);
+ //const [currentSize, setCurrentSize] = useState([{}]);
   const [isActive, setIsActive] = useState(false);
-
-  function handleIsActive() {
-    setIsActive(!isActive);
-  }
   
-  if (isActive) {
-    setCurrentColor("white");
-    setCurrentSize("S");
-  } else {
-    setCurrentColor("red");
-    setCurrentSize("M");
-  } 
+  useEffect(() => {
+    let pointer = null;
+
+    if(isActive) {
+      pointer = setIsActive(() =>{
+        setCurrentColor(isActive)
+      })
+    } else {
+      clearColor(pointer);
+    } 
+
+    return () =>
+       clearColor(pointer)
+  }, [currentColor, isActive])
+
 
   return (
     <article className={styles.product}>
@@ -51,9 +55,9 @@ const Product = props => {
           <div className={styles.colors}>
             <h3 className={styles.optionLabel}>Colors</h3>
             <ul className={styles.choices}>
-              <li><button type="button" className={clsx(styles.colorBlack, styles.active && styles.isActive)} onClick={handleIsActive} /></li>
-              <li><button type="button" className={clsx(styles.colorRed, styles.active && styles.isActive)} onClick={handleIsActive}/></li>
-              <li><button type="button" className={clsx(styles.colorWhite, styles.active && styles.isActive)} onClick={handleIsActive}/></li>
+              <li><button type="button" className={clsx(styles.colorBlack, styles.active && styles.isActive)} /></li>
+              <li><button type="button" className={clsx(styles.colorRed, styles.active && styles.isActive)} /></li>
+              <li><button type="button" className={clsx(styles.colorWhite, styles.active && styles.isActive)} /></li>
             </ul>
           </div>
           <Button className={styles.button}>
